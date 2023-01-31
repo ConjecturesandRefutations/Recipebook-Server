@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 const Recipe = require("../models/Recipe.model");
 
+const fileUploader = require("../config/cloudinary.config");
+
 //  POST /api/recipes  -  Creates a new recipe
 router.post("/recipes", (req, res, next) => {
   const { name, instructions } = req.body;
@@ -32,6 +34,20 @@ router.get("/recipes/:recipeId", (req, res, next) => {
   Recipe.findById(recipeId)
     .then((recipe) => res.status(200).json(recipe))
     .catch((error) => res.json(error));
+});
+
+router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
+  // console.log("file is: ", req.file)
+ 
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+  
+  // Get the URL of the uploaded file and send it as a response.
+  // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
+  
+  res.json({ fileUrl: req.file.path });
 });
 
 // PUT  /api/recipes/:recipeId  -  Updates a specific recipe by id

@@ -6,15 +6,17 @@ const app = express();
 
 require("./config")(app);
 
+const { isAuthenticated } = require("./middleware/jwt.middleware");
+
 // 👇 Start handling routes here
 const allRoutes = require("./routes");
 app.use("/api", allRoutes);
 
 const recipeRouter = require("./routes/recipe.routes");
-app.use("/api", recipeRouter);
+app.use("/api",  isAuthenticated, recipeRouter);
 
-/* const taskRouter = require("./routes/task.routes");
-app.use("/api", taskRouter); */
+const authRouter = require("./routes/auth.routes");        
+app.use("/auth", authRouter); 
 
 require("./error-handling")(app);
 
