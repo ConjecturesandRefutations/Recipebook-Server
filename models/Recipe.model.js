@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const recipeSchema = new Schema({
   name: String,
   instructions: String,
-  imageUrl: String
+  imgUrl: { type: String, default: "../images/cutlerynoback.png" },
 });
 
 module.exports = model("Recipe", recipeSchema);

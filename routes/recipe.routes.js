@@ -8,11 +8,14 @@ const fileUploader = require("../config/cloudinary.config");
 
 //  POST /api/recipes  -  Creates a new recipe
 router.post("/recipes", (req, res, next) => {
-  const { name, instructions } = req.body;
+/*   const { name, instructions, imgUrl } = req.body; */
 
-  Recipe.create({ name, instructions })
-    .then((response) => res.json(response))
-    .catch((err) => res.json(err));
+  Recipe.create(req.body)
+  .then((createdRecipe) => {
+    console.log("Created new recipe: ", createdRecipe);
+    res.status(200).json(createdRecipe);
+  })
+  .catch((err) => next(err));
 });
 
 //  GET /api/recipes -  Retrieves all of the recipes
@@ -36,8 +39,8 @@ router.get("/recipes/:recipeId", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
-  // console.log("file is: ", req.file)
+router.post("/upload", fileUploader.single("imgUrl"), (req, res, next) => {
+  console.log("file is: ", req.file)
  
   if (!req.file) {
     next(new Error("No file uploaded!"));
@@ -45,8 +48,7 @@ router.post("/upload", fileUploader.single("imageUrl"), (req, res, next) => {
   }
   
   // Get the URL of the uploaded file and send it as a response.
-  // 'fileUrl' can be any name, just make sure you remember to use the same when accessing it on the frontend
-  
+
   res.json({ fileUrl: req.file.path });
 });
 
