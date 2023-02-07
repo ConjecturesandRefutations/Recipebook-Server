@@ -7,6 +7,7 @@ const recipeSchema = new Schema({
   imgUrl: { type: String, default: "../images/cutlerynoback.png" },
   isVegetarian: Boolean,
   isVegan: Boolean,
+  feedback: [{ type: Schema.Types.ObjectId, ref: "Feedback" }],
 });
 
 module.exports = model("Recipe", recipeSchema);
