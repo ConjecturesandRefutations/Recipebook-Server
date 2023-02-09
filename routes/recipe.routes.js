@@ -4,11 +4,12 @@ const mongoose = require("mongoose");
 
 const Recipe = require("../models/Recipe.model");
 
+const User = require("../models/User.model")
+
 const fileUploader = require("../config/cloudinary.config");
 
 //  POST /api/recipes  -  Creates a new recipe
 router.post("/recipes", (req, res, next) => {
-/*   const { name, instructions, imgUrl } = req.body; */
 
   Recipe.create(req.body)
   .then((createdRecipe) => {
@@ -17,6 +18,37 @@ router.post("/recipes", (req, res, next) => {
   })
   .catch((err) => next(err));
 });
+
+/////////////////////////////////////////////////////////////////
+
+/* router.post("/recipes", (req, res, next) => {
+  if (!req.user) {
+  return res.status(401).json({ error: "Unauthorized, no user found" });
+  }
+  console.log('the user is' + req.user)
+  console.log("Decoded token:", req.payload); 
+  Recipe.create(req.body)
+  .then((createdRecipe) => {
+  User.findOneAndUpdate(
+  { email: req.user.email },
+  { $push: { recipes: createdRecipe._id } },
+  { new: true }
+  )
+  .then((updatedUser) => {
+  console.log("Created new recipe and updated user: ", updatedUser);
+  res.status(200).json(createdRecipe);
+  })
+  .catch((err) => {
+  console.error("Error updating user with recipe: ", err);
+  next(err);
+  });
+  })
+  .catch((err) => {
+  console.error("Error creating recipe: ", err);
+  next(err);
+  });
+  }); */
+
 
 //  GET /api/recipes -  Retrieves all of the recipes
 router.get("/recipes", (req, res, next) => {
@@ -83,5 +115,17 @@ router.delete("/recipes/:recipeId", (req, res, next) => {
     )
     .catch((error) => res.json(error));
 });
+
+/////////////////////////////////////////Route for MY recipes///////////////////////////////////
+
+//The following get route retrieves all the recipes of the logged-in user. 
+
+router.get("/recipes/:userId", (req, res, next) => {
+  const { userId } = user._id;
+  User.findById(userId)
+    .populate("recipes")
+    .then((user) => res.json(user.recipes))
+    .catch((err) => res.json(err));
+}); 
 
 module.exports = router;
