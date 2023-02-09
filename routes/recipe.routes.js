@@ -30,7 +30,7 @@ router.post("/recipes", (req, res, next) => {
   Recipe.create(req.body)
   .then((createdRecipe) => {
   User.findOneAndUpdate(
-  { email: req.user.email },
+  { email: req.payload.email },
   { $push: { recipes: createdRecipe._id } },
   { new: true }
   )
