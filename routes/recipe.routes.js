@@ -8,19 +8,6 @@ const User = require("../models/User.model")
 
 const fileUploader = require("../config/cloudinary.config");
 
-//  POST /api/recipes  -  Creates a new recipe
-/*  router.post("/recipes", (req, res, next) => {
-
-  Recipe.create(req.body)
-  .then((createdRecipe) => {
-    console.log("Created new recipe: ", createdRecipe);
-    res.status(200).json(createdRecipe);
-  })
-  .catch((err) => next(err));
-});  */
-
-/////////////////////////////////////////////////////////////////
-
  router.post("/recipes", (req, res, next) => {
 
   Recipe.create(req.body)
