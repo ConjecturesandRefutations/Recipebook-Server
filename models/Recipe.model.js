@@ -8,7 +8,6 @@ const recipeSchema = new Schema({
   imgUrl: { type: String, default: "../images/cutlerynoback.png" },
   isVegetarian: Boolean,
   isVegan: Boolean,
-  type: String,
   courseType:{
     type: String,
     enum:["Starter", "Main", "Dessert","Snack", "Other"]
