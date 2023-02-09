@@ -17,14 +17,14 @@ function getTokenFromHeaders (req) {
     // Get the encoded token string and return it
     const token = req.headers.authorization.split(" ")[1];
 
-    console.log("Decoded token1:", req.payload);
-
+    
     return token;
   } 
   
   return null;
 }
  
+console.log(isAuthenticated)
  
 // Export the middleware so that we can use it to create a protected routes
 module.exports = {

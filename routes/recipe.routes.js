@@ -9,7 +9,7 @@ const User = require("../models/User.model")
 const fileUploader = require("../config/cloudinary.config");
 
 //  POST /api/recipes  -  Creates a new recipe
-/* router.post("/recipes", (req, res, next) => {
+/*  router.post("/recipes", (req, res, next) => {
 
   Recipe.create(req.body)
   .then((createdRecipe) => {
@@ -17,20 +17,17 @@ const fileUploader = require("../config/cloudinary.config");
     res.status(200).json(createdRecipe);
   })
   .catch((err) => next(err));
-}); */
+});  */
 
 /////////////////////////////////////////////////////////////////
 
-router.post("/recipes", (req, res, next) => {
-  if (!req.user) {
-  return res.status(401).json({ error: "Unauthorized, no user found" });
-  }
-  console.log('the user is' + req.user)
-  console.log("Decoded token:", req.payload); 
+ router.post("/recipes", (req, res, next) => {
+
   Recipe.create(req.body)
   .then((createdRecipe) => {
+    console.log('Created Recipe:' + createdRecipe)
   User.findOneAndUpdate(
-  { email: req.payload.email },
+  { _id: req.payload._id },
   { $push: { recipes: createdRecipe._id } },
   { new: true }
   )
@@ -48,7 +45,7 @@ router.post("/recipes", (req, res, next) => {
   next(err);
   });
   });
-
+ 
 
 //  GET /api/recipes -  Retrieves all of the recipes
 router.get("/recipes", (req, res, next) => {
