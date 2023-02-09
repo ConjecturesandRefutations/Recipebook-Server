@@ -3,6 +3,7 @@ const { Schema, model } = mongoose;
 
 const recipeSchema = new Schema({
   name: String,
+  ingredients: String,
   instructions: String,
   imgUrl: { type: String, default: "../images/cutlerynoback.png" },
   isVegetarian: Boolean,
