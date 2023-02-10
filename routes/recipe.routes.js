@@ -104,12 +104,21 @@ router.delete("/recipes/:recipeId", (req, res, next) => {
 
 //The following get route retrieves all the recipes of the logged-in user. 
 
-router.get("/recipes/:userId", (req, res, next) => {
-  const { userId } = user._id;
+router.get("/recipes/user/:userId", (req, res, next) => {
+  const userId = req.params.userId;
   User.findById(userId)
-    .populate("recipes")
-    .then((user) => res.json(user.recipes))
-    .catch((err) => res.json(err));
-}); 
+  .populate("recipes")
+  .then((user) => {
+  const myRecipes = user.recipes;
+  res.status(200).json(myRecipes);
+  })
+  .catch((err) => {
+  console.error("Error fetching user's recipes: ", err);
+  next(err);
+  });
+  });
+
+
+
 
 module.exports = router;
