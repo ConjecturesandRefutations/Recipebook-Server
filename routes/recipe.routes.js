@@ -102,8 +102,6 @@ router.delete("/recipes/:recipeId", (req, res, next) => {
 
 /////////////////////////////////////////Route for MY recipes///////////////////////////////////
 
-//The following get route retrieves all the recipes of the logged-in user. 
-
 router.get("/recipes/user/:userId", (req, res, next) => {
   const userId = req.params.userId;
   User.findById(userId)
@@ -117,7 +115,6 @@ router.get("/recipes/user/:userId", (req, res, next) => {
   next(err);
   });
   });
-
 
 
 
