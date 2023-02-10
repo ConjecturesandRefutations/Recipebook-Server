@@ -35,7 +35,9 @@ router.get("/recipes/:recipeId", (req, res, next) => {
   }
 
   Recipe.findById(recipeId)
-    .then((recipe) => res.status(200).json(recipe))
+    .populate('feedback')
+    .then((recipe) => {console.log(recipe) 
+      res.status(200).json(recipe)})
     .catch((error) => res.json(error));
 });
 

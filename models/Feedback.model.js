@@ -7,4 +7,4 @@ const feedbackSchema = new Schema({
     author: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
-module.exports = model(Feedback, feedbackSchema);
+module.exports = model("Feedback", feedbackSchema);
