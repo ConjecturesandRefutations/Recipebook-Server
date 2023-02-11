@@ -51,7 +51,10 @@ router.get("/recipes/:recipeId", (req, res, next) => {
   }
 
   Recipe.findById(recipeId)
-    .populate('feedback')
+    .populate({
+      path:'feedback',
+      populate: { path: 'author' }
+    })
     .then((recipe) => {console.log(recipe) 
       res.status(200).json(recipe)})
     .catch((error) => res.json(error));
