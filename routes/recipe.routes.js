@@ -8,6 +8,8 @@ const User = require("../models/User.model")
 
 const fileUploader = require("../config/cloudinary.config");
 
+//////////////////////////Code for creating the user's recipes and adding to their array////////////////////
+
  router.post("/recipes", (req, res, next) => {
 
   Recipe.create(req.body)
@@ -121,6 +123,19 @@ router.get("/recipes/user/:userId", (req, res, next) => {
   });
   });
 
-
+//////////////////////////////////Route for retrieving the user's ID associated with a given recipe///////////////////////////////////
+  router.get("/recipes/:recipeId/user", (req, res, next) => {
+    const recipeId = req.params.recipeId;
+    Recipe.findById(recipeId)
+      .populate("user")
+      .then((recipe) => {
+        const user = recipe.user;
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.error("Error fetching recipe's user: ", err);
+        next(err);
+      });
+  });
 
 module.exports = router;
