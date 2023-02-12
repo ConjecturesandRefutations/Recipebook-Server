@@ -10,7 +10,7 @@ const recipeSchema = new Schema({
   isVegan: Boolean,
   courseType:{
     type: String,
-    enum:["Starter", "Main", "Dessert","Snack", "Other"]
+    enum:["Starter", "Main", "Dessert","Snack", "Breakfast", "Other"]
   },
   feedback: [{ type: Schema.Types.ObjectId, ref: "Feedback" }],
 });
