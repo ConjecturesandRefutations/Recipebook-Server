@@ -107,7 +107,7 @@ router.post('/login', (req, res, next) => {
         );
 
         // Send the token as the response
-        res.status(200).json({ authToken: authToken });
+        res.status(200).json({ authToken: authToken, _id });
       }
       else {
         res.status(401).json({ message: "Unable to authenticate the user" });
@@ -123,7 +123,7 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
 
   // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and made available on `req.payload`
-  console.log(`req.payload`, req.payload);
+  console.log(`Decoded Token2:`, req.payload);
 
   // Send back the object with user data
   // previously set as the token payload

@@ -4,19 +4,37 @@ const mongoose = require("mongoose");
 
 const Recipe = require("../models/Recipe.model");
 
+const User = require("../models/User.model")
+
 const fileUploader = require("../config/cloudinary.config");
 
-//  POST /api/recipes  -  Creates a new recipe
-router.post("/recipes", (req, res, next) => {
-/*   const { name, instructions, imgUrl } = req.body; */
+//////////////////////////Code for creating the user's recipes and adding to their array////////////////////
+
+ router.post("/recipes", (req, res, next) => {
 
   Recipe.create(req.body)
   .then((createdRecipe) => {
-    console.log("Created new recipe: ", createdRecipe);
-    res.status(200).json(createdRecipe);
+    console.log('Created Recipe:' + createdRecipe)
+  User.findOneAndUpdate(
+  { _id: req.payload._id },
+  { $push: { recipes: createdRecipe._id } },
+  { new: true }
+  )
+  .then((updatedUser) => {
+  console.log("Created new recipe and updated user: ", updatedUser);
+  res.status(200).json(createdRecipe);
   })
-  .catch((err) => next(err));
-});
+  .catch((err) => {
+  console.error("Error updating user with recipe: ", err);
+  next(err);
+  });
+  })
+  .catch((err) => {
+  console.error("Error creating recipe: ", err);
+  next(err);
+  });
+  });
+ 
 
 //  GET /api/recipes -  Retrieves all of the recipes
 router.get("/recipes", (req, res, next) => {
@@ -35,7 +53,12 @@ router.get("/recipes/:recipeId", (req, res, next) => {
   }
 
   Recipe.findById(recipeId)
-    .then((recipe) => res.status(200).json(recipe))
+    .populate({
+      path:'feedback',
+      populate: { path: 'author' }
+    })
+    .then((recipe) => {console.log(recipe) 
+      res.status(200).json(recipe)})
     .catch((error) => res.json(error));
 });
 
@@ -83,5 +106,22 @@ router.delete("/recipes/:recipeId", (req, res, next) => {
     )
     .catch((error) => res.json(error));
 });
+
+/////////////////////////////////////////Route for MY recipes///////////////////////////////////
+
+router.get("/recipes/user/:userId", (req, res, next) => {
+  const userId = req.params.userId;
+  User.findById(userId)
+  .populate("recipes")
+  .then((user) => {
+  const myRecipes = user.recipes;
+  res.status(200).json(myRecipes);
+  })
+  .catch((err) => {
+  console.error("Error fetching user's recipes: ", err);
+  next(err);
+  });
+  });
+
 
 module.exports = router;
