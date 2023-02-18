@@ -8,6 +8,7 @@ const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
 const router = express.Router();
 const saltRounds = 10;
 
+console.log(process.env.TOKEN_SECRET)
 
 // POST /auth/signup  - Creates a new user in the database
 router.post('/signup', (req, res, next) => {
@@ -106,6 +107,7 @@ router.post('/login', (req, res, next) => {
           { algorithm: 'HS256', expiresIn: "6h" }
         );
 
+
         // Send the token as the response
         res.status(200).json({ authToken: authToken, _id });
       }
@@ -129,6 +131,22 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
   // previously set as the token payload
   res.status(200).json(req.payload);
 });
+
+// Route for deleting user's account:
+
+router.delete('/user/delete', isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+
+  User.findByIdAndDelete(userId)
+    .then(() => {
+      res.status(200).json({ message: "User account has been deleted." });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    });
+});
+
 
 
 module.exports = router;
