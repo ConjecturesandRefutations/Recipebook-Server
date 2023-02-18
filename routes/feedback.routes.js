@@ -11,6 +11,7 @@ const User = require("../models/User.model");
 
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 
+
 //POST /api/recipes/:recipeId/feedback
 router.post(
   "/recipes/:recipeId/feedback",
@@ -47,5 +48,40 @@ router.post(
     })
   }
 );
+
+router.put("/feedback/:feedbackId/edit", (req, res, next) => {
+  const { feedbackId } = req.params;
+  //const { score, comment, user } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(feedbackId)) {
+    res.status(400).json({ message: "This feedback id is not valid" });
+    return;
+  }
+
+  Feedback
+  .findByIdAndUpdate(feedbackId, req.body, { new: true })
+  .then((updatedFeedback) =>
+  res.json(updatedFeedback))
+  .catch((error) => res.json(error))
+});
+
+
+router.delete("/feedback/:feedbackId", (req, res, next) => {
+  const { feedbackId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(feedbackId)) {
+    res.status(400).json({ message: "This feedback id is not valid" });
+    return;
+  }
+
+  Feedback
+  .findByIdAndRemove(feedbackId)
+  .then(() =>
+    res.json({
+      message: `Feedback id ${feedbackId} has been removed successfully`,
+    })
+  )
+  .catch((error) => res.json(error));
+});
 
 module.exports = router;
