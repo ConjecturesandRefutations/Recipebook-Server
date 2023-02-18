@@ -123,4 +123,17 @@ router.get("/recipes/user/:userId", (req, res, next) => {
   });
   });
 
+  /////////////////////////////////////////Route for determining the user from a given recipe///////////////////////////////////
+
+  router.get('/recipes/:recipeId/user', async (req, res) => {
+    try {
+      const recipeId = req.params.recipeId;
+      const recipe = await Recipe.findById(recipeId);
+      const user = await User.findOne({ recipes: recipeId });
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: 'Error retrieving user data' });
+    }
+  });
+
 module.exports = router;
