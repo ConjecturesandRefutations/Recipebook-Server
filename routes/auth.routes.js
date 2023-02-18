@@ -132,5 +132,21 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
   res.status(200).json(req.payload);
 });
 
+// Route for deleting user's account:
+
+router.delete('/user/delete', isAuthenticated, (req, res, next) => {
+  const userId = req.payload._id;
+
+  User.findByIdAndDelete(userId)
+    .then(() => {
+      res.status(200).json({ message: "User account has been deleted." });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    });
+});
+
+
 
 module.exports = router;
