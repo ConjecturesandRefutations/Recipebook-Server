@@ -8,6 +8,7 @@ const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
 const router = express.Router();
 const saltRounds = 10;
 
+console.log(process.env.TOKEN_SECRET)
 
 // POST /auth/signup  - Creates a new user in the database
 router.post('/signup', (req, res, next) => {
@@ -105,6 +106,7 @@ router.post('/login', (req, res, next) => {
           process.env.TOKEN_SECRET,
           { algorithm: 'HS256', expiresIn: "6h" }
         );
+
 
         // Send the token as the response
         res.status(200).json({ authToken: authToken, _id });
